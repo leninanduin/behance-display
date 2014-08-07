@@ -1,53 +1,16 @@
 <html>
 <head>
     <title></title>
+    <script type="text/javascript">
+        var render = "projects_list";
+    </script>
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript">
-        var behance_api_key = "8WLknnl5NIKSyTzYZw9kX1soGwPZ6duT"
-        var api_url = "http://behance.net/v2/";
-        var user_id = "batebate" 
-        var b_data, html_template;
-    </script>
+    <script  type="text/javascript" src="js/be-settings.js"></script>
     <script  type="text/javascript" src="js/be.js"></script>
-    <script type="text/javascript">
-        be.user.projects(user_id, {}, function(d){
-            b_data = d;                    
-
-            if (b_data.projects.length > 0 ){            
-
-                for (var i in b_data.projects) {                    
-                    var owners = new Array();                    
-
-                    p = b_data.projects[i];                    
-                    html_template = $(".project").eq(0).clone();                    
-                    $("a.project_link", html_template).attr("href", p.url);
-                    //cover
-                    $("img.cover", html_template).attr("src", p.covers[202]);
-                    //name
-                    $(".name", html_template).html(p.name);
-                    //owners
-                    for (var o in p.owners){
-                        owners[o] = "<a href='"+p.owners[o].url+"'>" + p.owners[o].display_name +"</a>";                        
-                    }
-                    $(".owners", html_template).html(owners.join(', '));
-                    //tags - fields                    
-                    $(".fields", html_template).html(p.fields.join(', '));
-                    //stats   
-                    $(".projects").append(html_template);
-                    //stats
-                    for (var o in p.stats){
-                        var stat = "<span class='"+o+"'>" +o +": "+ p.stats[o] +"</span>";
-                        $(".stats", html_template).prepend(stat);
-                    }
-                    
-                }
-                $(".project").eq(0).remove();
-            }
-        });
-    </script>
+    <script type="text/javascript" src="js/be-display.js"></script>
     <style>
         .projects{
-            list-style: none;            
+            list-style: none;
         }
         .project{
             float: left;margin: 15px;
@@ -70,15 +33,15 @@
     <div id="content">
         <ul class="projects">
             <li class="project">
-                <div>                    
+                <div>
                     <a class="project_link">
                         <img src="" class="cover">
                         <span class="name"></span>
                     </a>
                     <span class="owners"></span>
                     <span class="fields"></span>
-                    <div class="stats"></div>                
-                </div>                
+                    <div class="stats"></div>
+                </div>
             </li>
         </ul>
     </div>

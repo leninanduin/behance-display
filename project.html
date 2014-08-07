@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript">
+        var render = "project";
+    </script>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script  type="text/javascript" src="js/be-settings.js"></script>
+    <script  type="text/javascript" src="js/be.js"></script>
+    <script type="text/javascript" src="js/be-display.js"></script>
+    <style>
+        .project_c span{
+            display: block;margin:10px 0;
+        }
+        .project_meta{
+            float: right;
+            width: 35%
+        }
+        .modules{
+            float: left;
+            width: 60%;
+            text-align:center;
+            list-style: none;
+        }
+        .comments_c{
+            list-style: none;padding: 15px 0; float: left;width: 100%;
+        }
+        .comments_c li{
+            width: 85%;float: left;border-bottom: 1px dashed;
+        }
+        .comments_c li img.user_img{
+            float: left; margin-right: 10px
+        }
+        .comments_c li div{
+            float: left;
+        }
+        span.user_name, span.date_on{
+            display: inline-block;
+        }
+        span.date_on{
+            opacity: .7;margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <a href="index.html">Home</a>
+    </div>
+    <div id="content">
+        <div class="project_c">
+            <div class="project_meta">
+                <span class="name"></span>
+                <span class="description"></span>
+
+                <span class="owners"></span>
+                <span class="tags"></span>
+                <span class="fields"></span>
+                <div class="stats"></div>
+
+                <ul class="comments_c">
+                    <li>
+                        <img class="user_img">
+                        <div>
+                            <span class="user_name"></span>
+                            <span class="date_on"></span>
+                            <p class="comment"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <ul class="modules">
+                <li>
+                    <img src="">
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
