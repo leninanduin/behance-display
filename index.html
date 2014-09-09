@@ -1,49 +1,58 @@
 <html>
 <head>
-    <title></title>
-    <script type="text/javascript">
-        var render = "projects_list";
-    </script>
-    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-    <script  type="text/javascript" src="js/be-settings.js"></script>
-    <script  type="text/javascript" src="js/be.js"></script>
-    <script type="text/javascript" src="js/be-display.js"></script>
-    <style>
-        .projects{
-            list-style: none;
-        }
-        .project{
-            float: left;margin: 15px;
-        }
-        .cover, .owners, .fields, .stats{
-            display: block;
-        }
-        .cover{
-            border-radius: 15px 15px 0 0;
-        }
-        .owners, .fields, .stats{
-            border-top: 1px solid black;padding: 5px 0;
-        }
-        .stats span{
-            padding: 0 5px;
-        }
-    </style>
+  <title></title>
+  <script type="text/javascript">
+    var render = "projects_list";
+  </script>
+  <script type="text/javascript" src="static/js/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="static/js/be-settings.js"></script>
+  <script type="text/javascript" src="static/js/be.js"></script>
+  <script type="text/javascript" src="static/js/be-display.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="static/css/icons.css" type="text/css" />
+  <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
 </head>
 <body>
-    <div id="content">
-        <ul class="projects">
-            <li class="project">
-                <div>
-                    <a class="project_link">
-                        <img src="" class="cover">
-                        <span class="name"></span>
-                    </a>
-                    <span class="owners"></span>
-                    <span class="fields"></span>
-                    <div class="stats"></div>
-                </div>
-            </li>
-        </ul>
+  <header>
+    <div class="avatar">
+      <img src="static/assets/avatar.jpg" alt="User Avatar" />
     </div>
+    <h1 class="username"><a href="index.html">Phoenix the cat</a></h1>
+    <span class="userdescription">Designer & Catsultant</span>
+    <nav>
+      <!--datos de contacto-->
+      <a href="" target="_blank" class="accent-txt">Facebook</a>
+      <a href="" target="_blank" class="accent-txt">Twitter</a>
+      <a href="" target="_blank" class="accent-txt">Dribble</a>
+      <a href="" target="_blank" class="accent-txt">LinkedIn</a>
+      <a href="mailto:tannia@designersrepvblic.com" class="accent-txt">Contact me</a>
+    </nav>
+  </header>
+  <section id="content">
+    <ul class="projects">
+      <li class="project">
+        <div>
+          <a class="project_link project_thumb">
+            <div class="overlay accent-bg slow">
+              <i class="fi-zoom-in"></i>
+            </div>
+            <img src="" class="cover">
+          </a>
+          <a class="project_link accent-txt">
+            <span class="name"></span>
+          </a>
+          <span class="fields"></span>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <footer>
+    <div class="behance">
+      <a href="http://www.behance.net" target="_blank">Powered by <i class="fi-social-behance accent-txt"></i></a>
+    </div>
+    <div class="repvblic">
+      <a href="http://www.repvblic.co/behance/" target="_blank" class="icon">Repvblic.co</a>
+    </div>
+  </footer>
 </body>
 </html>

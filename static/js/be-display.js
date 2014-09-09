@@ -23,12 +23,12 @@ if (render == 'projects_list'){
 
 			            $("a.project_link", html_template).attr("href", url);
 			            //cover
-			            $("img.cover", html_template).attr("src", p.covers[202]);
+			            $("img.cover", html_template).attr("src", p.covers[404]);
 			            //name
 			            $(".name", html_template).html(p.name);
 			            //owners
 			            for (var o in p.owners){
-			                owners[o] = "<a href='"+p.owners[o].url+"'>" + p.owners[o].display_name +"</a>";
+			                owners[o] = "<a href='"+p.owners[o].url+"' class='accent-txt'>" + p.owners[o].display_name +"</a>";
 			            }
 			            $(".owners", html_template).html(owners.join(', '));
 			            //tags - fields
@@ -37,7 +37,7 @@ if (render == 'projects_list'){
 			            $(".projects").append(html_template);
 			            //stats
 			            for (var o in p.stats){
-			                var stat = "<span class='"+o+"'>" +o +": "+ p.stats[o] +"</span>";
+			                var stat = "<span class='"+o+"'><i class='accent-txt'></i>" + p.stats[o] + "&nbsp;" + o +"</span>";
 			                $(".stats", html_template).prepend(stat);
 			            }
 			        }
@@ -77,7 +77,7 @@ if (render == 'project'){
 		            $(".description", html_template).html(p.description);
 		            //owners
 		            for (var o in p.owners){
-		                owners[o] = "<a href='"+p.owners[o].url+"'>" + p.owners[o].display_name +"</a>";
+		                owners[o] = "<a href='"+p.owners[o].url+"' class='accent-txt'>" + p.owners[o].display_name +"</a>";
 		            }
 		            $(".owners", html_template).html(owners.join(', '));
 
@@ -100,7 +100,7 @@ if (render == 'project'){
 			        }
 		            //stats
 		            for (var o in p.stats){
-		                var stat = "<span class='"+o+"'>" +o +": "+ p.stats[o] +"</span>";
+		                var stat = "<span class='"+o+"'><i class='accent-txt'></i>" + p.stats[o] + "&nbsp;" + o + "</span>";
 		                $(".stats", html_template).append(stat);
 		            }
 		            //comments
