@@ -276,3 +276,16 @@ function getUrlVar(key){
 	return result && unescape(result[1]) || "";
 }
 
+//fixed nav
+
+$(document).ready(function(){
+
+  $(window).scroll(function () { 
+    if ($(window).scrollTop() > 500) {
+  	  $('#sticky').addClass('is-on');
+  	} 
+  	else {
+  	  $('#sticky').removeClass('is-on');
+  	}
+  });
+});
