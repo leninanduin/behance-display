@@ -80,8 +80,8 @@ function renderProjects(_data){
 		        });
 	        }, 300);
         }
-
-
+    }else{
+    	$("#loader").fadeOut();
     }
 }
 
@@ -260,7 +260,11 @@ var no_more_projects = false;
 
 function fetchUserProjects(_curr_page){
 	is_loading_projects = true;
-	$("#loader").fadeIn();
+
+	if(!no_more_projects){
+		$("#loader").fadeIn();
+	}
+
 	var passed_hrs = Math.floor( (Date.now() - localStorage['user_projects_'+curr_page+'_updated']) / 1000 / 60 / 60);
 
 	if ( local_storage && localStorage["user_projects_"+_curr_page] && passed_hrs < 3 ){
@@ -279,6 +283,7 @@ function fetchUserProjects(_curr_page){
 				renderProjects(b_data);
 			}else{
 				no_more_projects = true;
+				$("#loader").fadeOut();
 			}
 		});
 	}
@@ -335,7 +340,7 @@ $(document).ready(function(){
 	  	if (render == "index.html"){
 	 	 	//bottom scroll loads more items
 	  		if( $(window).scrollTop() + $(window).height() >= ($(document).height() - 30)) {
-	  			_log('is is_loading_projects:' +is_loading_projects);
+	  			_log('is_loading_projects:' +is_loading_projects);
 	  			if (!is_loading_projects){
 	   				fetchUserProjects(curr_page);
 	   			}
