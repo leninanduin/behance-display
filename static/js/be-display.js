@@ -12,20 +12,32 @@ if(typeof(Storage) !== "undefined") {
     local_storage = 1;
 }
 
+var curr_page = 1;
+
 function renderProjects(_data){
+
 	if (_data.projects.length > 0 ){
         for (var i in _data.projects) {
+        	p = _data.projects[i];
             var owners = new Array();
-
-            p = _data.projects[i];
             html_template = $(tpl).eq(0).clone();
 
             var params = {id:p.id , name:p.name };
             var url = 'project.html?'+$.param(params);
 
             $("a.project_link", html_template).attr("href", url);
+
+            var _cover = 0;
+
+            for (var size in p.covers){
+            	if ( size > _cover ){
+            		_cover = size;
+            	}
+            }
             //cover
-            $("img.cover", html_template).attr("src", p.covers[404]);
+            $("img.cover", html_template).attr("src", p.covers[_cover] );
+
+
             //name
             $(".name", html_template).html(p.name);
             //owners
@@ -37,13 +49,19 @@ function renderProjects(_data){
             $(".fields", html_template).html(p.fields.join(', '));
             //stats
             $(".projects").append(html_template);
+
+            $(html_template).attr('page', 'page_'+curr_page);
             //stats
             for (var o in p.stats){
                 var stat = "<span class='"+o+"'><i class='accent-txt'></i>" + p.stats[o] + "&nbsp;" + o +"</span>";
                 $(".stats", html_template).prepend(stat);
             }
         }
-        $(tpl).eq(0).remove();
+        if ( curr_page === 1 ){
+        	$(tpl).eq(0).remove();
+        }
+        curr_page ++;
+        is_loading_projects = false;
     }
 }
 
@@ -61,23 +79,29 @@ if (render == 'index.html'){
 
 		}else{
 			if (local_storage){
-				if ( !localStorage.user_projects ){
-					fetchUserProjects();
+				if ( !localStorage['user_projects_'+curr_page] ){
+					_log('case 1');
+					fetchUserProjects(curr_page);
 				}else{
 					//caceh time 1hr
-					passed_hrs = Math.floor( (Date.now() - localStorage.user_projects_updated) / 1000 / 60 / 60);
+					passed_hrs = Math.floor( (Date.now() - localStorage['user_projects_'+curr_page+'_updated']) / 1000 / 60 / 60);
 					if ( passed_hrs > 1 ){
 						//updating local data
-						fetchUserProjects();
+						_log('case 2');
+						fetchUserProjects(curr_page);
 					}else{
 						//using local data
-						renderProjects(JSON.parse( localStorage.user_projects ));
+						b_data = JSON.parse( localStorage['user_projects_'+curr_page]);
+						_log('case 3');
+						renderProjects(b_data);
 					}
 				}
 
 			}else{
+				_log('case 4');
 				be.user(user_id, function(d){
-					renderProjects(d);
+					b_data = d;
+					renderProjects(b_data);
 				});
 			}
 		}
@@ -228,15 +252,30 @@ function fetchUserData(){
 	});
 	return false;
 }
+var no_more_projects = false;
 
-function fetchUserProjects(){
-	be.user.projects(user_id, {}, function(d){
-	    b_data = d;
-	    localStorage.setItem("user_projects", JSON.stringify(d) );
-		localStorage.setItem("user_projects_updated", Date.now() );
+function fetchUserProjects(_curr_page){
+
+	if ( local_storage && localStorage["user_projects_"+_curr_page] ){
+		b_data = JSON.parse( localStorage["user_projects_"+_curr_page] );
 		renderProjects(b_data);
-	});
-
+	}else{
+		is_loading_projects = true;
+		_log('loading page: '+_curr_page+'...');
+		be.user.projects(user_id, {page:_curr_page}, function(d){
+			_log('page fetched: '+_curr_page);
+			if ( d.projects.length > 0 && !no_more_projects ){
+		    	b_data = d;
+		    	if ( local_storage ){
+				    localStorage.setItem('user_projects_'+_curr_page, JSON.stringify(d) );
+					localStorage.setItem('user_projects_'+_curr_page+'_updated', Date.now() );
+				}
+				renderProjects(b_data);
+			}else{
+				no_more_projects = true;
+			}
+		});
+	}
 	return false;
 }
 
@@ -277,15 +316,23 @@ function getUrlVar(key){
 }
 
 //fixed nav
-
+var is_loading_projects = false;
 $(document).ready(function(){
 
-  $(window).scroll(function () { 
-    if ($(window).scrollTop() > 500) {
-  	  $('#sticky').addClass('is-on');
-  	} 
-  	else {
-  	  $('#sticky').removeClass('is-on');
-  	}
-  });
+  	$(window).scroll(function () {
+	    if ($(window).scrollTop() > 350) {
+	  		$('#sticky').addClass('is-on');
+	  	}
+	  	else {
+	  		$('#sticky').removeClass('is-on');
+	  	}
+	  	if (render == "index.html"){
+	 	 	//bottom scroll loads more items
+	  		if( $(window).scrollTop() + $(window).height() >= ($(document).height() - 30)) {
+	  			if (!is_loading_projects){
+	   				fetchUserProjects(curr_page);
+	   			}
+			}
+		}
+  	});
 });
