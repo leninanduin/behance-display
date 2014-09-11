@@ -55,6 +55,10 @@ function renderProjects(_data){
             // }
         }
         var elems_faded_in = 0;
+        var time_to_wait = 300;
+        if (curr_page == 1){
+        	time_to_wait = 0;
+        }
         setTimeout(function(){
         	$("#loader").fadeOut();
         	$('[page=page_'+curr_page+']')
@@ -69,7 +73,7 @@ function renderProjects(_data){
 			        is_loading_projects = false;
 	        	}
 	        });
-        }, 300);
+        }, time_to_wait);
 
     }
 }
