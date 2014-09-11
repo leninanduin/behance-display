@@ -2,7 +2,7 @@
 var user_id = "bakea"; //your username
 var behance_api_key = "8WLknnl5NIKSyTzYZw9kX1soGwPZ6duT"; //DO NOT CHANGE
 
-//extra links
+//nav links
 //you can add as many as you need
 var extra_links = [
     {
@@ -11,6 +11,6 @@ var extra_links = [
     },
     {
         "service_name": "Contact me",
-        "url": "mailto:holabate@gmail.com"
+        "url": "mailto:youremail@gmail.com"
     }
 ]

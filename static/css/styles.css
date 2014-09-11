@@ -532,6 +532,12 @@ a.gotobehance {
   margin-right: 5px;
 }
 
+section#loader {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
 @media all
 and (min-width: 480px)
 and (max-width: 999px) {
