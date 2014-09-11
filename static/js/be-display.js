@@ -22,7 +22,11 @@ function renderProjects(_data){
         	p = _data.projects[i];
             var owners = new Array();
             html_template = $(tpl).eq(0).clone();
-            $(html_template).hide();
+            if (curr_page > 1){
+            	$(html_template).hide();
+        	}else{
+        		$(html_template).show();
+        	}
 
             var params = {id:p.id , name:p.name };
             var url = 'project.html?'+$.param(params);
@@ -55,25 +59,28 @@ function renderProjects(_data){
             // }
         }
         var elems_faded_in = 0;
-        var time_to_wait = 300;
-        if (curr_page == 1){
-        	time_to_wait = 0;
-        }
-        setTimeout(function(){
+
+        if (curr_page === 1){
         	$("#loader").fadeOut();
-        	$('[page=page_'+curr_page+']')
-	        .fadeIn('slow', function(){
-	        	elems_faded_in ++;
-	        	if( elems_faded_in == _data.projects.length ){
-	        		_log('fade in complete page: '+curr_page);
-	        		if ( curr_page === 1 ){
-			        	$(tpl).eq(0).remove();
-			        }
-			        curr_page ++;
-			        is_loading_projects = false;
-	        	}
-	        });
-        }, time_to_wait);
+        	_log('fade in complete page: '+curr_page);
+	        $(tpl).eq(0).remove();
+	        curr_page ++;
+	        is_loading_projects = false;
+        }else{
+        	setTimeout(function(){
+	        	$("#loader").fadeOut();
+	        	$('[page=page_'+curr_page+']')
+		        .fadeIn('slow', function(){
+		        	elems_faded_in ++;
+		        	if( elems_faded_in == _data.projects.length ){
+		        		_log('fade in complete page: '+curr_page);
+				        curr_page ++;
+				        is_loading_projects = false;
+		        	}
+		        });
+	        }, 300);
+        }
+
 
     }
 }
