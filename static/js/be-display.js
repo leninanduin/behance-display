@@ -10,17 +10,19 @@ function _log(s){
 local_storage = 0;
 if(typeof(Storage) !== "undefined") {
     local_storage = 1;
+}else{
+	alert("Your browser doesn't support localStorage, please update your window to the internet");
 }
 
 var curr_page = 1;
-
 function renderProjects(_data){
-
+	_log('Render page: '+curr_page);
 	if (_data.projects.length > 0 ){
         for (var i in _data.projects) {
         	p = _data.projects[i];
             var owners = new Array();
             html_template = $(tpl).eq(0).clone();
+            $(html_template).hide();
 
             var params = {id:p.id , name:p.name };
             var url = 'project.html?'+$.param(params);
@@ -28,16 +30,11 @@ function renderProjects(_data){
             $("a.project_link", html_template).attr("href", url);
 
             var _cover = 0;
-
             for (var size in p.covers){
-            	if ( size > _cover ){
-            		_cover = size;
-            	}
+            	if ( size > _cover ){_cover = size;}
             }
             //cover
             $("img.cover", html_template).attr("src", p.covers[_cover] );
-
-
             //name
             $(".name", html_template).html(p.name);
             //owners
@@ -47,21 +44,33 @@ function renderProjects(_data){
             $(".owners", html_template).html(owners.join(', '));
             //tags - fields
             $(".fields", html_template).html(p.fields.join(', '));
-            //stats
+
             $(".projects").append(html_template);
 
             $(html_template).attr('page', 'page_'+curr_page);
             //stats
-            for (var o in p.stats){
-                var stat = "<span class='"+o+"'><i class='accent-txt'></i>" + p.stats[o] + "&nbsp;" + o +"</span>";
-                $(".stats", html_template).prepend(stat);
-            }
+            // for (var o in p.stats){
+            //     var stat = "<span class='"+o+"'><i class='accent-txt'></i>" + p.stats[o] + "&nbsp;" + o +"</span>";
+            //     $(".stats", html_template).prepend(stat);
+            // }
         }
-        if ( curr_page === 1 ){
-        	$(tpl).eq(0).remove();
-        }
-        curr_page ++;
-        is_loading_projects = false;
+        var elems_faded_in = 0;
+        setTimeout(function(){
+        	$("#loader").fadeOut();
+        	$('[page=page_'+curr_page+']')
+	        .fadeIn('slow', function(){
+	        	elems_faded_in ++;
+	        	if( elems_faded_in == _data.projects.length ){
+	        		_log('fade in complete page: '+curr_page);
+	        		if ( curr_page === 1 ){
+			        	$(tpl).eq(0).remove();
+			        }
+			        curr_page ++;
+			        is_loading_projects = false;
+	        	}
+	        });
+        }, 300);
+
     }
 }
 
@@ -72,39 +81,23 @@ if (render == 'index.html'){
 	var tpl = '.project';
 
 	$(function() {
+
 		if ( $(tpl).length == 0 ){
 			//verify template
 			alert("Our awesome proyect template doesn't exists, please add a '"+tpl+"' template");
-		}if ( !user_id  ){
-
-		}else{
-			if (local_storage){
-				if ( !localStorage['user_projects_'+curr_page] ){
-					_log('case 1');
-					fetchUserProjects(curr_page);
-				}else{
-					//caceh time 1hr
-					passed_hrs = Math.floor( (Date.now() - localStorage['user_projects_'+curr_page+'_updated']) / 1000 / 60 / 60);
-					if ( passed_hrs > 1 ){
-						//updating local data
-						_log('case 2');
-						fetchUserProjects(curr_page);
-					}else{
-						//using local data
-						b_data = JSON.parse( localStorage['user_projects_'+curr_page]);
-						_log('case 3');
-						renderProjects(b_data);
-					}
-				}
-
-			}else{
-				_log('case 4');
-				be.user(user_id, function(d){
-					b_data = d;
-					renderProjects(b_data);
-				});
-			}
+			return false;
 		}
+		if ( !user_id  ){
+			alert("Plase setup your 'user_id' in be-settings.js");
+			return false;
+		}
+		if ( !behance_api_key  ){
+			alert("The 'behance_api_key' is not present, please review be-settings.js");
+			return false;
+		}
+		$('#loader, .project').hide();
+		//where the magic happens
+		fetchUserProjects(curr_page);
 	});
 }
 
@@ -255,15 +248,17 @@ function fetchUserData(){
 var no_more_projects = false;
 
 function fetchUserProjects(_curr_page){
+	is_loading_projects = true;
+	$("#loader").fadeIn();
+	var passed_hrs = Math.floor( (Date.now() - localStorage['user_projects_'+curr_page+'_updated']) / 1000 / 60 / 60);
 
-	if ( local_storage && localStorage["user_projects_"+_curr_page] ){
+	if ( local_storage && localStorage["user_projects_"+_curr_page] && passed_hrs < 3 ){
 		b_data = JSON.parse( localStorage["user_projects_"+_curr_page] );
 		renderProjects(b_data);
 	}else{
-		is_loading_projects = true;
 		_log('loading page: '+_curr_page+'...');
 		be.user.projects(user_id, {page:_curr_page}, function(d){
-			_log('page fetched: '+_curr_page);
+			_log('page loaded: '+_curr_page);
 			if ( d.projects.length > 0 && !no_more_projects ){
 		    	b_data = d;
 		    	if ( local_storage ){
@@ -329,6 +324,7 @@ $(document).ready(function(){
 	  	if (render == "index.html"){
 	 	 	//bottom scroll loads more items
 	  		if( $(window).scrollTop() + $(window).height() >= ($(document).height() - 30)) {
+	  			_log('is is_loading_projects:' +is_loading_projects);
 	  			if (!is_loading_projects){
 	   				fetchUserProjects(curr_page);
 	   			}
