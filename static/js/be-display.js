@@ -337,7 +337,7 @@ $(document).ready(function(){
 	  	else {
 	  		$('#sticky').removeClass('is-on');
 	  	}
-	  	if (render == "index.html"){
+	  	if (render.match(/(index)/g)){
 	 	 	//bottom scroll loads more items
 	  		if( $(window).scrollTop() + $(window).height() >= ($(document).height() - 30)) {
 	  			_log('is_loading_projects:' +is_loading_projects);
