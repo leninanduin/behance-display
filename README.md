@@ -1,7 +1,9 @@
-behance-display
-===============
+Portfolio Display - Powered by Behance
+======================================
 
-Implementación del api de Behance para una galeria de proyectos
+Setup your username in js/be-settings.js
 
+For more info, go to:
 
-Setup your user name in js/be-settings.js
+http://repvblic.co/pdisplay/
+https://github.com/leninanduin/behance-display
