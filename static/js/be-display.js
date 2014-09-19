@@ -85,39 +85,42 @@ function renderProjects(_data){
     }
 }
 
-var render = location.pathname.match(/(\w+\.\w+)/g);
+var render,_data, html_template,tpl,b_data;
 
-if (render == 'index.html'){
-	var _data, html_template;
-	var tpl = '.project';
 
-	$(function() {
+$(function() {
+	if ( $('body[id!=""]').length == 1 ){
+		render = $('body').attr('id');
+	}else{
+		render = location.pathname.match(/(\w+\.\w+)/g);
+	}
+	_log(render);
 
-		if ( $(tpl).length == 0 ){
-			//verify template
-			alert("Our awesome proyect template doesn't exists, please add a '"+tpl+"' template");
-			return false;
-		}
-		if ( !user_id  ){
-			alert("Plase setup your 'user_id' in be-settings.js");
-			return false;
-		}
-		if ( !behance_api_key  ){
-			alert("The 'behance_api_key' is not present, please review be-settings.js");
-			return false;
-		}
-		$('#loader, .project').hide();
-		//where the magic happens
-		fetchUserProjects(curr_page);
-	});
-}
+	if (render.match(/(index)/g)){
+		_data, html_template;
+		tpl = '.project';
 
-if (render == 'project.html'){
-	var b_data, html_template;
-	var tpl = '.project_c';
-	var p_id = getUrlVar('id');
+			if ( $(tpl).length == 0 ){
+				//verify template
+				alert("Our awesome proyect template doesn't exists, please add a '"+tpl+"' template");
+				return false;
+			}
+			if ( !user_id  ){
+				alert("Plase setup your 'user_id' in be-settings.js");
+				return false;
+			}
+			if ( !behance_api_key  ){
+				alert("The 'behance_api_key' is not present, please review be-settings.js");
+				return false;
+			}
+			$('#loader, .project').hide();
+			//where the magic happens
+			fetchUserProjects(curr_page);
+	}
+	if (render.match(/(project)/g)){
+		tpl = '.project_c';
+		var p_id = getUrlVar('id');
 
-	$(function() {
 		if ( $(tpl).length == 0 ){
 			//verify template
 			alert("Our awesome proyect template doesn't exists, please add a '"+tpl+"' template");
@@ -127,14 +130,9 @@ if (render == 'project.html'){
 			    if (b_data.project){
 
 		            var owners = new Array();
-
 		            p = b_data.project;
-
-		         //    if(b_data.project.styles.background){
-		         //    	$('body').css('background', '#'+b_data.project.styles.background.color);
-		        	// }
-
 		            html_template = $(tpl);
+
 		            //name
 		            $(".name", html_template).html(p.name);
 		            //desc
@@ -201,8 +199,10 @@ if (render == 'project.html'){
 			    }
 			});
 		}
-	});
-}
+	}
+});
+
+
 
 function renderSocialLink(elem){
 	if ( $('nav').length > 0 ){
