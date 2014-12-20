@@ -14,6 +14,15 @@ if(typeof(Storage) !== "undefined") {
 	alert("Your browser doesn't support localStorage, please update your window to the internet");
 }
 
+//chech for settings changes
+if ( localStorage.user_data ){
+	var ud = JSON.parse( localStorage.user_data );
+	if ( user_id != ud.user.username ){
+		localStorage.clear();
+		location.reload();
+	}
+}
+
 var curr_page = 1;
 function renderProjects(_data){
 	_log('Render page: '+curr_page);
@@ -151,12 +160,32 @@ $(function() {
 
 		            //stats
 		            $(".projects").append(html_template);
-		            //modules - images
+		            //modules - images or iframes
 		            if ( $(".modules", html_template) ){
 			            for (var o in p.modules){
-			            	var module_template = $(".modules li ", html_template).eq(0).clone();
-			            	$("img", module_template ).attr('src', p.modules[o].src);
-			                $(".modules", html_template).append(module_template);
+			            	_log( p.modules[o].type );
+			            	switch ( p.modules[o].type ) {
+			            		case "text":
+			            			var module_template = $(".modules li ", html_template).eq(0).clone();
+			            			$("img", module_template ).remove();
+			            			$(module_template).append("<p>"+p.modules[o].text_plain+"</p>");
+			                		$(".modules", html_template).append(module_template);
+
+			            			break;
+			            		case "image":
+			            			var module_template = $(".modules li ", html_template).eq(0).clone();
+			            			$("img", module_template ).attr('src', p.modules[o].src);
+			                		$(".modules", html_template).append(module_template);
+
+			            			break;
+
+			            		case "embed":
+			            			var module_template = $(".modules li ", html_template).eq(0).clone();
+			            			$("img", module_template ).remove();
+			            			$(module_template).append(p.modules[o].embed);
+			            			$(".modules", html_template).append(module_template);
+			            		break;
+			            	}
 			            }
 			            $(".modules li ", html_template).eq(0).remove();
 			        }

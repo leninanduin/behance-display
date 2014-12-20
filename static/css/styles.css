@@ -372,6 +372,11 @@ ul.modules {
   display: block;
 }
 
+.modules li p {
+  text-align: center;
+  margin: 10px auto;
+}
+
 .project_meta {
   display: block;
   width: 100%;
